@@ -93,7 +93,7 @@ export default {
             .then(response => {
                 console.log(response.data);
                 this.students = this.students.filter(student => student._id !== studentId);
-            })
+           })
             .catch(error => {
                 console.log("Error deleting student: ", error);
             });
