@@ -35,7 +35,7 @@
                   <td>{{ student.group }}</td>
                   <td>{{ student.birthYear }}</td>
                   <td><input type="checkbox" v-model="student.passedPractical" :disabled="false" /></td>
-                  <td><a @click="removeStudent(student.id)">Видалити</a></td>
+                  <td><a @click="removeStudent(student.id)" v-show="item.group === getCurrentUser.group">Видалити</a></td>
                 </tr>
               </tbody>
             </table>
@@ -62,6 +62,7 @@
 </template>
 <script>
 import axios from 'axios'
+import { getCurrentInstance } from 'vue'
 
 export default {
     data(){
@@ -86,6 +87,7 @@ export default {
             .then(response => {
                 console.log(response.data);
                 this.students.push(response.data);
+                 this.$store.commit('setCount', this.students.length);
             })
     },
     deleteStudent: function(studentId) {
@@ -93,11 +95,20 @@ export default {
             .then(response => {
                 console.log(response.data);
                 this.students = this.students.filter(student => student._id !== studentId);
+                 this.$store.commit('setCount', this.students.length);
            })
             .catch(error => {
                 console.log("Error deleting student: ", error);
             });
     }
+},
+computed: {
+  studentsCount() {
+    return this.$store.getters.getCount
+  },
+  getCurrentUser() {
+    return this.$store.getters.getUser
+  }
 }
 }
 </script>
